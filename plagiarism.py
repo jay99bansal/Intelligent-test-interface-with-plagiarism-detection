@@ -8,7 +8,7 @@ try:
 except ImportError:
     print('Install pymysql!')
     pass
-db = pymysql.connect("localhost", "root", "test", "wordpress")
+db = pymysql.connect("localhost","wordpressuser","wordpressuser","wordpress" )
 cursor = db.cursor()
 
 
@@ -57,8 +57,10 @@ def plag_ques_wise(roll, ques, ans, weight, correct):
         plag_index[0].append(i[1])
     plag_index[0].append('Overall_index')
     current_pair = 1
-    for i in range(len(roll)):
-        for j in range(i + 1, len(roll)):
+    nroll = len(roll)
+    tottodo = nroll*(nroll-1)/2
+    for i in range(nroll):
+        for j in range(i + 1, nroll):
             plag_index.append([roll[i], roll[j]])
             for k in range(len(ques)):
                 if ques[k][2] == 'textbox' or ques[k][2] == 'textarea':
@@ -77,6 +79,7 @@ def plag_ques_wise(roll, ques, ans, weight, correct):
                         plag_index[current_pair].append(0.0)
                 else:
                     plag_index[current_pair].append(0)
+            print(str(round( current_pair*100/tottodo ,2))+'% done...')
             current_pair += 1
     return plag_index
 
@@ -84,7 +87,7 @@ def plag_ques_wise(roll, ques, ans, weight, correct):
 def norm_final_index(index_q, marks):
     final = index_q[:]
     tot_marks = np.sum(np.array(marks))
-    for i in range(1, final):
+    for i in range(1, len(final)):
         prod = np.sum(np.array(final[i][2:]) * np.array(marks))
         final[i].append(prod / tot_marks)
     return final
@@ -92,6 +95,6 @@ def norm_final_index(index_q, marks):
 
 def mult_corr_list(ans):
     ll = ans.split('"')
-    res = [test_list[i] for i in range(len(ll)) if i % 2 != 0]
+    res = [ll[i] for i in range(len(ll)) if i % 2 != 0]
     res.sort()
     return res
