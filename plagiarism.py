@@ -1,115 +1,97 @@
-from similarity.normalized_levenshtein import NormalizedLevenshtein
-from similarity.longest_common_subsequence import LongestCommonSubsequence
-from similarity.metric_lcs import MetricLCS
-from similarity.cosine import Cosine
-from similarity.jaccard import Jaccard
-import functools
-import math
-from nltk import word_tokenize 
-from nltk.util import ngrams
-import string
+from Match_strings import plag_index_strings
+import numpy as np
 
-def pre_process(s):
-    s = s.translate(str.maketrans('', '', string.punctuation))
-    #s = s.replace(" ", "")
-    return s.lower()
+try:
+    import pymysql
 
-def dotproduct(v1, v2):
-    return sum((a*b) for a, b in zip(v1, v2))
-
-def length(v):
-    return math.sqrt(dotproduct(v, v))
-
-def cosangle(v1, v2):
-    if ((length(v1) * length(v2)) != 0):
-        return dotproduct(v1, v2) / (length(v1) * length(v2))
-    return 0
-
-def met_cosine_word(s1,s2,n):
-    token = word_tokenize(s1)
-    ngram = list(ngrams(token, n))
-    ngram = ['~'.join(i) for i in ngram]
-    freq1 = {} 
-    for item in ngram: 
-        if (item in freq1): 
-            freq1[item] += 1
-        else: 
-            freq1[item] = 1
-    token = word_tokenize(s2)
-    ngram = list(ngrams(token, n))
-    ngram = ['~'.join(i) for i in ngram]
-    freq2 = {} 
-    for item in ngram: 
-        if (item in freq2): 
-            freq2[item] += 1
-        else: 
-            freq2[item] = 1
-    alldict = [freq1, freq2]
-    allkey = functools.reduce(set.union, map(set, map(dict.keys, alldict)))
-    vec1 = []
-    vec2 = []
-    for key in allkey:
-        if key in freq1:
-            vec1.append(freq1[key])
-        else:
-            vec1.append(0)
-        if key in freq2:
-            vec2.append(freq2[key])
-        else:
-            vec2.append(0)
-    return cosangle(vec1, vec2)
-
-def met_jaccard(s1,s2,n):
-    jac = Jaccard(n)
-    return jac.similarity(s1, s2)
-
-def met_cosine(s1,s2,n):
-    cosine = Cosine(n)
-    p1 = cosine.get_profile(s1)
-    p2 = cosine.get_profile(s2)
-    return cosine.similarity_profiles(p1, p2)
-
-def met_lcs(s1,s2):
-    lcs = LongestCommonSubsequence()
-    metric_lcs = MetricLCS()
-    dist = lcs.distance(s1,s2)
-    # our metric
-    #print((len(s1)+len(s2)-dist)/(2*len(s1)))
-    return 1-metric_lcs.distance(s1, s2)
-
-def met_weighted(str1, str2):
-    ind = []
-    #ind.append(met_lcs(str1, str2))
-    val1 = 0
-    val2 = 0
-    val3 = 0
-    val4 = 0
-    p = 1.2
-    for i in range(1,5):
-        k = i**p
-        val4 += k
-        val1 += met_cosine(str1, str2,i)*k
-        val2 += met_jaccard(str1, str2,i)*k
-        val3 += met_cosine_word(str1, str2,i)*k
-    val1 = val1/val4
-    val2 = val2/val4
-    val3 = val3/val4
-    # ind.append(met_lcs(str1, str2))
-    ind.append(val1)
-    ind.append(val2)
-    ind.append(val3)
-    met_weights = [0.2, 0.3, 0.5]
-    ans = 0
-    for i in range(0,len(ind)):
-        ans+=ind[i]*met_weights[i]
-    return ans
+    pymysql.install_as_MySQLdb()
+except ImportError:
+    print('Install pymysql!')
+    pass
+db = pymysql.connect("localhost", "root", "test", "wordpress")
+cursor = db.cursor()
 
 
-s1 = 'Plagiarism detection is the process of locating instances of plagiarism within a work or document. The widespread use of computers and the advent of the Internet have made it easier to plagiarize the work of others. Detection of plagiarism can be undertaken in a variety of ways. Human detection is the most traditional form of identifying plagiarism from written work. This can be a lengthy and time-consuming task for the reader and can also result in inconsistencies in how plagiarism is identified within an organization. Text-matching software (TMS), which is also referred to as "plagiarism detection software" or "anti-plagiarism" software, has become widely available, in the form of both commercially available products as well as open-source software. TMS does not actually detect plagiarism per se, but instead finds specific passages of text in one document that match text in another document.'
+def plag_calc(parent_id, correct, marks, weight):
+    test_id = parent_id
+    roll = extract_roll(test_id)
+    ques = extract_questions(test_id)
+    ans = extract_answers(roll, ques)
+    index_q = plag_ques_wise(roll, ques, ans, weight, correct)
+    final_index = norm_final_index(index_q, marks)
+    return final_index
 
-s2 = 'A dictionary has multiple key:value pairs. There can be multiple pairs where value corresponding to a key is a list. To check that the value is a list or not we use the isinstance() method which is inbuilt in Python. Plagiarism detection is the process of locating instances of plagiarism within a work or document. The widespread use of computers and the advent of the Internet have made it easier to plagiarize the work of others. Text-matching software, which is also referred to as "plagiarism detection software" or "anti-plagiarism" software.'
 
-s1 = pre_process(s1)
-s2 = pre_process(s2)
+def extract_roll(test_id):
+    cursor.execute(
+        "SELECT id from wp_nf3_fields WHERE LOWER(label) LIKE 'roll%number' AND parent_id=" + str(test_id) + ";")
+    # Fetch a single row using fetchone() method.
+    roll_meta_key = '_field_' + str(list(cursor.fetchone())[0])
+    cursor.execute("select meta_value from wp_postmeta where meta_key='%s'" % (roll_meta_key))
+    roll_numbers = [i[0] for i in cursor.fetchall()]
+    return roll_numbers
 
-print(met_weighted(s1,s2))
+
+def extract_questions(test_id):
+    cursor.execute("SELECT id,label,type from wp_nf3_fields WHERE parent_id=" + str(
+        test_id) + " and label!='Submit' and LOWER(label) NOT LIKE 'roll%number';")
+    questions = [list(i) for i in cursor.fetchall()]
+    for i in questions:
+        i[0] = '_field_' + str(i[0])
+    return questions
+
+
+def extract_answers(roll, ques):
+    answers = [[] for i in roll]
+    for q in ques:
+        cursor.execute("select meta_value from wp_postmeta where meta_key='%s'" % (q[0]))
+        out = [i[0] for i in cursor.fetchall()]
+        for i in range(len(out)):
+            answers[i].append(out[i])
+    return answers
+
+
+def plag_ques_wise(roll, ques, ans, weight, correct):
+    plag_index = [['Roll_1', 'Roll_2']]
+    for i in ques:
+        plag_index[0].append(i[1])
+    plag_index[0].append('Overall_index')
+    current_pair = 1
+    for i in range(len(roll)):
+        for j in range(i + 1, len(roll)):
+            plag_index.append([roll[i], roll[j]])
+            for k in range(len(ques)):
+                if ques[k][2] == 'textbox' or ques[k][2] == 'textarea':
+                    plag_index[current_pair].append(plag_index_strings(ans[i][k], ans[j][k], weight))
+                elif ques[k][2] == 'listradio':
+                    if ans[i][k] == ans[j][k] and ans[i][k] != correct[k]:
+                        plag_index[current_pair].append(1.0)
+                    else:
+                        plag_index[current_pair].append(0.0)
+                elif ques[k][2] == 'listcheckbox':
+                    ans1 = mult_corr_list(ans[i][k])
+                    ans2 = mult_corr_list(ans[j][k])
+                    if ans1 == ans2 and ans1 != correct[k]:
+                        plag_index[current_pair].append(1.0)
+                    else:
+                        plag_index[current_pair].append(0.0)
+                else:
+                    plag_index[current_pair].append(0)
+            current_pair += 1
+    return plag_index
+
+
+def norm_final_index(index_q, marks):
+    final = index_q[:]
+    tot_marks = np.sum(np.array(marks))
+    for i in range(1, final):
+        prod = np.sum(np.array(final[i][2:]) * np.array(marks))
+        final[i].append(prod / tot_marks)
+    return final
+
+
+def mult_corr_list(ans):
+    ll = ans.split('"')
+    res = [test_list[i] for i in range(len(ll)) if i % 2 != 0]
+    res.sort()
+    return res
