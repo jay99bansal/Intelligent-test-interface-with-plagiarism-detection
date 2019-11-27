@@ -13,7 +13,7 @@ import argparse
 from plagiarism import plag_calc
 
 ##
-#@brief This function takes testID, solutions csv path and weights csv path as an arguments and generating the output plagarism index in a csv file.
+#@brief This function takes testID, solutions csv path and weights csv path as an arguments and generating the output plagarism index in a csv #file.
 #@details In this the solutions csv file is first structured in a formt so the other functions can compare the answers given by students
 #with correct answer efficiently. Also the weights are being extracted from its location and normalized in this function. Finally all these
 #are passed to another function that is checking plagarism and returning a numpy array having the plagarism index.

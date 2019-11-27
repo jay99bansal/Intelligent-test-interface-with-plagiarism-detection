@@ -60,6 +60,7 @@ def cosangle(v1, v2):
 #@return Cosine of the angle between two vectors formed by taking frequency of words instead of characters
 #@param s1 String 
 #@param s2 String 
+#@param n int cosine angle will take n letters at a time 
 #
 def met_cosine_word(s1, s2, n):
     token = word_tokenize(s1)
@@ -96,11 +97,24 @@ def met_cosine_word(s1, s2, n):
     return cosangle(vec1, vec2)
 
 
+##
+#@brief This function is taking two strings as arguments and returning a single value which is jacard index between these two strings.
+#@return Jacard index between given strings
+#@param s1 String 
+#@param s2 String 
+#@param n int jacard index will take n letters at a time
+#
 def met_jaccard(s1, s2, n):
     jac = Jaccard(n)
     return jac.similarity(s1, s2)
 
-
+##
+#@brief This function is taking two strings as arguments and returning a single value which is cosine metric index between these two strings.
+#@return cosine metric index between given strings
+#@param s1 String 
+#@param s2 String 
+#@param n int met_cosine will take n letters at a time
+#
 def met_cosine(s1, s2, n):
     cosine = Cosine(n)
     p1 = cosine.get_profile(s1)
@@ -108,7 +122,12 @@ def met_cosine(s1, s2, n):
     val = cosine.similarity_profiles(p1, p2)
     return val
 
-
+##
+#@brief This function is taking two strings as arguments and returning metric similarity between them
+#@return Metric similarity between two strings
+#@param s1 String 
+#@param s2 String 
+#
 def met_lcs(s1, s2):
     lcs = LongestCommonSubsequence()
     metric_lcs = MetricLCS()
@@ -117,7 +136,14 @@ def met_lcs(s1, s2):
     # print((len(s1)+len(s2)-dist)/(2*len(s1)))
     return 1 - metric_lcs.distance(s1, s2)
 
-
+##
+#@brief This function is taking two strings as arguments and one list consisting of weights int it corresponding to each algorithm. It 
+#evaluates string matching according to given weights of algorithms and finally return us with an index.
+#@return ans float plagiarism index between two responses submitted by 2 students
+#@param s1 String 
+#@param s2 String 
+#@param weight list it is the list set by test taker to restrict what weihtage should be given to each algorithm.
+#
 def plag_index_strings(str1, str2, weight):
     ind = []
     # ind.append(met_lcs(str1, str2))

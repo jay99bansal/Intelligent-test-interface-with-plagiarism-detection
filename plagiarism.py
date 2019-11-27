@@ -149,9 +149,9 @@ def norm_final_index(index_q, marks):
     return final
 
 ##
-#@brief This function takes plagiarism indices for individual questions and weight them according to the distribution of marks.
-#@return res 
-#@param ans 
+#@brief This function takes answers stored for multiple choice MCQs and format that into sorted order of options.
+#@return res list consist of selected options in sorted order
+#@param ans String specifies choices selected by student
 
 def mult_corr_list(ans):
     ll = ans.split('"')
