@@ -1,24 +1,16 @@
-##@file plagiarism.py
-#@brief This file of the project extracts strored data of responses from the database and evaluates a normalised plagiarism index.
-#@details This is the python script which will automatically check for plagiarism. For each roll number all it's answers to the test 
-#questions are extracted from the database. Then for each question's answer, his response is checked pairwise with all the other
-#responses submitted for the same test. Plagiarism indices corresponding to each answer with each other student's response are stored
-#in output csv. And finally weighted plagiarism index according to the distribution of marks of the questions is evaluated and returned.
-#@author Infernos : CS699 Course Project Software Lab
-#@date Thursday, November 29, 2019
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Nov 26 13:50:18 2019
 
-##Include section
+@author: sriniwas
+"""
+
 import csv
 import pandas as pd
 import numpy as np 
+import argparse
 from plagiarism import plag_calc
-##
-#@brief This function is taking a filename as argument and returning a list of integers inside the file.
-#@details The given file contains integers each line. This function is picking out text line by line, typecasting it to integers
-#and appending it to a list. Finally it is returning that list.
-#@return l list 
-#@param filename the name of the file 
-#
+
 def generate_csv(parentID, solutions, weights):
     print("Evaluating results...")
     answers = []
@@ -57,6 +49,13 @@ def generate_csv(parentID, solutions, weights):
     print("Saving results to plagarism.csv")
     np.savetxt('plagarism.csv', plag, delimiter=',', fmt='%s')
     print("Success!")
-    
 
-generate_csv(3,"solutions.csv", "weights.csv")
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description = 'Say hello')
+    parser.add_argument("-i", "--testID", help="Test ID")
+    parser.add_argument("-s", "--solutions", help="Path of solutions csv file")
+    parser.add_argument("-w", "--weights", help="Path of weights csv file")
+    args = parser.parse_args()
+    
+    generate_csv(args.testID, args.solutions, args.weights)
