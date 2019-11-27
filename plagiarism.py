@@ -4,7 +4,7 @@
 #questions are extracted from the database. Then for each question's answer, his response is checked pairwise with all the other
 #responses submitted for the same test. Plagiarism indices corresponding to each answer with each other student's response are stored
 #in output csv. And finally weighted plagiarism index according to the distribution of marks of the questions is evaluated and returned.
-#@author Infernos : CS699 Software Lab
+#@author Infernos : CS699 Course Project Software Lab
 #@date Thursday, November 29, 2019
 
 ##Include section
@@ -91,14 +91,15 @@ def extract_answers(roll, ques):
 
 
 ##
-#@brief 
-#@details 
+#@brief Taking rollnumbers, questions, answers, weights and correct sols and returning the plagarism index.
+#@details This function takes all nC2 combinations of the students who has taken the test and comparing their solutions with each other.
+#And then evaluating a cheating index for that question. Also there is a progress bar at the end which shows the % of job finished.
 #@return plag_index
-#@param roll  
-#@param ques 
-#@param ans
-#@param weight
-#@param correct
+#@param roll list All rollnumbers
+#@param ques list All questions
+#@param ans list All answers
+#@param weight list Weights of algorithms
+#@param correct list
 def plag_ques_wise(roll, ques, ans, weight, correct):
     plag_index = [['Roll_1', 'Roll_2']]
     for i in ques:

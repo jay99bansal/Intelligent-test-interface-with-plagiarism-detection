@@ -1,10 +1,9 @@
-##@file python_problem.py
-#@author Infernos:CS699
-#@brief Implementing doxygen-style comments for documenting a python
-#program and the functions inside.
-#@details This program is implementing some python functions on the given data file of integers. 
-#@date Thursday, October 28, 2019
-#
+##@file Match_strings.py
+#@brief This file of the project is applying various string matching algorithms for detecting plagiarism between subjective type questions.
+#@details In this analysis of various string matching algorithms implemented in strsim library is done and then the algorithms whose
+#performance is good enough for the task are used combinely to come up with a fair match index between strings.
+#@author Infernos : CS699 Course Project Software Lab
+#@date Thursday, November 29, 2019
 
 ##Include section
 from similarity.normalized_levenshtein import NormalizedLevenshtein
@@ -19,32 +18,49 @@ from nltk.util import ngrams
 import string
 
 ##
-#@brief This function is taking a filename as argument and returning a list of integers inside the file.
-#@details The given file contains integers each line. This function is picking out text line by line, typecasting it to integers
-#and appending it to a list. Finally it is returning that list.
-#@return l list 
-#@param filename the name of the file 
+#@brief This function is taking a String as an argument, truncating spaces and converting it to a lowercase substring as a whole.
+#@return String 
+#@param s String 
 #
 def pre_process(s):
     s = s.translate(str.maketrans('', '', string.punctuation))
     # s = s.replace(" ", "")
     return s.lower()
 
-
+##
+#@brief This function is taking two vectors as arguments and returning a single dot product value for them.
+#@return Dot product of both the agruments
+#@param V1 vector 1
+#@param V2 vector 2
+#
 def dotproduct(v1, v2):
     return sum((a * b) for a, b in zip(v1, v2))
 
-
+##
+#@brief This function is taking a vector as argument and returning a single value which is norm of it.
+#@return Norm of the vector
+#@param V1 vector 1
+#
 def length(v):
     return math.sqrt(dotproduct(v, v))
 
-
+##
+#@brief This function is taking two vectors as arguments and returning a single cosine value of the angle between these vectors.
+#@return Cosine of the angle between the two vectors
+#@param V1 vector 1
+#@param V2 vector 2
+#
 def cosangle(v1, v2):
     if (length(v1) * length(v2)) != 0:
         return dotproduct(v1, v2) / (length(v1) * length(v2))
     return 0
 
-
+##
+#@brief This function is taking two vectors as arguments and returning a single cosine value of the angle between these vectors.
+#@return Cosine of the angle between two vectors formed by taking frequency of words instead of characters
+#@param s1 String 
+#@param s2 String 
+#
 def met_cosine_word(s1, s2, n):
     token = word_tokenize(s1)
     ngram = list(ngrams(token, n))
