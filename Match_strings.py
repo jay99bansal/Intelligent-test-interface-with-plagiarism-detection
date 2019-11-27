@@ -1,3 +1,12 @@
+##@file python_problem.py
+#@author Infernos:CS699
+#@brief Implementing doxygen-style comments for documenting a python
+#program and the functions inside.
+#@details This program is implementing some python functions on the given data file of integers. 
+#@date Thursday, October 28, 2019
+#
+
+##Include section
 from similarity.normalized_levenshtein import NormalizedLevenshtein
 from similarity.longest_common_subsequence import LongestCommonSubsequence
 from similarity.metric_lcs import MetricLCS
@@ -9,7 +18,13 @@ from nltk import word_tokenize
 from nltk.util import ngrams
 import string
 
-
+##
+#@brief This function is taking a filename as argument and returning a list of integers inside the file.
+#@details The given file contains integers each line. This function is picking out text line by line, typecasting it to integers
+#and appending it to a list. Finally it is returning that list.
+#@return l list 
+#@param filename the name of the file 
+#
 def pre_process(s):
     s = s.translate(str.maketrans('', '', string.punctuation))
     # s = s.replace(" ", "")

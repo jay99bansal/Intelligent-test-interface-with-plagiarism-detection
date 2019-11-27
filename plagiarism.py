@@ -1,3 +1,13 @@
+##@file plagiarism.py
+#@brief This file of the project extracts strored data of responses from the database and evaluates a normalised plagiarism index.
+#@details This is the python script which will automatically check for plagiarism. For each roll number all it's answers to the test 
+#questions are extracted from the database. Then for each question's answer, his response is checked pairwise with all the other
+#responses submitted for the same test. Plagiarism indices corresponding to each answer with each other student's response are stored
+#in output csv. And finally weighted plagiarism index according to the distribution of marks of the questions is evaluated and returned.
+#@author Infernos : CS699 Software Lab
+#@date Thursday, November 29, 2019
+
+##Include section
 from Match_strings import plag_index_strings
 import numpy as np
 
@@ -11,7 +21,13 @@ except ImportError:
 db = pymysql.connect("localhost","wordpressuser","wordpressuser","wordpress" )
 cursor = db.cursor()
 
-
+##
+#@brief This function is taking a filename as argument and returning a list of integers inside the file.
+#@details The given file contains integers each line. This function is picking out text line by line, typecasting it to integers
+#and appending it to a list. Finally it is returning that list.
+#@return l list 
+#@param filename the name of the file 
+#
 def plag_calc(parent_id, correct, marks, weight):
     test_id = parent_id
     roll = extract_roll(test_id)
@@ -22,6 +38,14 @@ def plag_calc(parent_id, correct, marks, weight):
     return final_index
 
 
+##
+#@brief This function is taking a test id as argument and returning a list of roll numbers attempted that test.
+#@details Since test id field is not there in the table wp_postmeta, this function is extracting roll numbers by first extracting id 
+# values corresponding to that test id and whose label is roll number or similar to it. Then using these id values roll numbers can be 
+#extracted from wp_postmeta table. 
+#@return roll_numbers list  
+#@param test_id int test id
+#
 def extract_roll(test_id):
     cursor.execute(
         "SELECT id from wp_nf3_fields WHERE LOWER(label) LIKE 'roll%number' AND parent_id=" + str(test_id) + ";")
@@ -31,7 +55,13 @@ def extract_roll(test_id):
     roll_numbers = [i[0] for i in cursor.fetchall()]
     return roll_numbers
 
-
+##
+#@brief This function takes test id as argument and returns a list of list which consist of triplets id, label and type of each question.
+#@details Function is executing a query and extracting only questions (Submit label and roll number are ignored) from the database corresponding to that 
+#test. It is also storing the type of the question.
+#@return questions list of lists  
+#@param test_id int test id
+#
 def extract_questions(test_id):
     cursor.execute("SELECT id,label,type from wp_nf3_fields WHERE parent_id=" + str(
         test_id) + " and label!='Submit' and LOWER(label) NOT LIKE 'roll%number';")
@@ -40,6 +70,15 @@ def extract_questions(test_id):
         i[0] = '_field_' + str(i[0])
     return questions
 
+
+##
+#@brief This function takes list of roll numbers as argument and returns a list of list which contains all answers.
+#@details For each roll number answer is having a list in it which consist of this roll number's responses to all the questions of
+#the test. Iterating the same way answer is list of lists which keeps the information of responses of all the roll numbers attempted
+# this test
+#@return answers list of lists contains all question's responses corresponding to all the roll numbers 
+#@param roll list roll number 
+#@param ques list of lists information about the question extracted from database
 
 def extract_answers(roll, ques):
     answers = [[] for i in roll]
@@ -51,6 +90,15 @@ def extract_answers(roll, ques):
     return answers
 
 
+##
+#@brief 
+#@details 
+#@return plag_index
+#@param roll  
+#@param ques 
+#@param ans
+#@param weight
+#@param correct
 def plag_ques_wise(roll, ques, ans, weight, correct):
     plag_index = [['Roll_1', 'Roll_2']]
     for i in ques:
@@ -83,7 +131,14 @@ def plag_ques_wise(roll, ques, ans, weight, correct):
             current_pair += 1
     return plag_index
 
-
+##
+#@brief This function takes plagiarism indices for individual questions and weight them according to the distribution of marks.
+#@details For each pair of roll numbers there is a plagiarism index for each question. To get one normalised Plagiarism index, these
+#indices are weighted according to the Question's marks distribution and It finally return us a final normalised Plagiarism Indices for
+# all pairs.
+#@return final list  Contains normalised plagiarism index for each pair of roll numbers
+#@param index_x list Contains plagiarised index corresponding to each question for each pair of rollnumbers 
+#@param marks list marks weightage given by the teacher to each question
 def norm_final_index(index_q, marks):
     final = index_q[:]
     tot_marks = np.sum(np.array(marks))
@@ -92,6 +147,10 @@ def norm_final_index(index_q, marks):
         final[i].append(prod / tot_marks)
     return final
 
+##
+#@brief This function takes plagiarism indices for individual questions and weight them according to the distribution of marks.
+#@return res 
+#@param ans 
 
 def mult_corr_list(ans):
     ll = ans.split('"')
