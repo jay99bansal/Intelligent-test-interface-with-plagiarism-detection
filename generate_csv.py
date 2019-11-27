@@ -1,16 +1,25 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Nov 26 13:50:18 2019
+##@file plagiarism.py
+#@brief This file of the project takes input of files from user and converts those files to array of list formats so as to take in
+#use aftterwards.
+#@details This is 
+#@author Infernos : CS699 Course Project Software Lab
+#@date Thursday, November 29, 2019
 
-@author: sriniwas
-"""
-
+##Include section
 import csv
 import pandas as pd
 import numpy as np 
 import argparse
 from plagiarism import plag_calc
 
+##
+#@brief This function takes testID, solutions csv path and weights csv path as an arguments and generating the output plagarism index in a csv file.
+#@details In this the solutions csv file is first structured in a formt so the other functions can compare the answers given by students
+#with correct answer efficiently. Also the weights are being extracted from its location and normalized in this function. Finally all these
+#are passed to another function that is checking plagarism and returning a numpy array having the plagarism index.
+#@param parentID int 
+#@param solutions str 
+#@param weights str
 def generate_csv(parentID, solutions, weights):
     print("Evaluating results...")
     answers = []
