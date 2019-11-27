@@ -1,0 +1,18 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Introduction}{1}{section.0.1}
+\contentsline {subsection}{\numberline {1.1}Motivation}{1}{subsection.0.1.1}
+\contentsline {subsection}{\numberline {1.2}Objective}{1}{subsection.0.1.2}
+\contentsline {section}{\numberline {2}Approach to the problem}{1}{section.0.2}
+\contentsline {section}{\numberline {3}Layout and Flow of Project}{3}{section.0.3}
+\contentsline {subsection}{\numberline {3.1}Front End}{3}{subsection.0.3.1}
+\contentsline {subsection}{\numberline {3.2}Back End}{5}{subsection.0.3.2}
+\contentsline {section}{\numberline {4}Technologies Used}{6}{section.0.4}
+\contentsline {subsection}{\numberline {4.1}Python}{6}{subsection.0.4.1}
+\contentsline {subsection}{\numberline {4.2}Wordpress}{7}{subsection.0.4.2}
+\contentsline {subsection}{\numberline {4.3}MySQL}{7}{subsection.0.4.3}
+\contentsline {section}{\numberline {5}Efforts}{8}{section.0.5}
+\contentsline {subsection}{\numberline {5.1}Fraction of time spent in different parts of the project}{8}{subsection.0.5.1}
+\contentsline {subsection}{\numberline {5.2}Fraction of work done by different team members}{8}{subsection.0.5.2}
+\contentsline {section}{\numberline {6}Conclusion}{8}{section.0.6}
+\contentsline {section}{\numberline {7}Future Enhancements}{9}{section.0.7}
+\contentsline {section}{\numberline {8}References}{9}{section.0.8}

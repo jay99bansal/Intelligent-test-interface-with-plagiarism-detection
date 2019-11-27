@@ -1,0 +1,37 @@
+The test may have various type of questions:
+\begin{enumerate}
+    \item Multiple Choice Questions Choose Single Answer
+    \item Multiple Choice Questions Choose Multiple Answers
+    \item Subjective Answer Single Line
+    \item Subjective Answer Multiple lines
+\end{enumerate}
+
+Starting with the subjective answers, we need to apply string matching algorithms in such a way that it gives optimal metric index of match.For this purpose, we explored \textbf{strsim}, A library implementing different string similarity and distance measures. It currently includes a dozen of string matching algorithms implemented.\cite{strsim} Some of those which we found beneficial for the task supposed be done, are as following:
+\begin{itemize}
+    \item \textbf{Longest Common Subsequence :} LCS gives the size of the longest subsequence which is common to both the given strings.
+    The LCS distance between strings X (of length n) and Y (of length m) is \\  n + m - 2 |LCS(X, Y)| min = 0 max = n + m
+    \item \textbf{Normalized Levenshtein :}The Levenshtein distance between two words is the minimum number of single-character edits (insertions, deletions or substitutions) required to change one word into the other.
+    The levenshtein distance divided by the length of the longest string results in a value that is always in the interval [0.0 1.0]. This is Normalized Levenshtein distance.The similarity is computed as 1 - normalized distance.
+    
+    \item \textbf{Metric Longest Common Subsequence :} It is a measure of distance metric based on Longest Common Subsequence explained earlier. It is computed as: \\
+    \begin{equation}
+     1 - |LCS(s1, s2)| / max(|s1|, |s2|)
+     \end{equation}
+    \item \textbf{Shingle (N-gram) based algorithms :}An n-gram is a contiguous sequence of n items from a given sample of text or speech. The items can be phonemes, syllables, letters, words or base pairs according to the application. The n-grams typically are collected from a text or speech corpus. When the items are words, n-grams may also be called shingles. An n-gram of size 1 is referred to as a unigram, size 2 is a bigram and size 3 is a trigram. These are effectively used in string matching algorithms.\\ 
+    A few algorithms work by converting strings into sets of n-grams (sequences of n characters, also sometimes called k-shingles). The similarity or distance between the strings is then the similarity or distance between the sets.
+    \\ Some of n-gram based algorithms are as follows: 
+    \begin{itemize}
+        \item \textbf{Q-Gram : }The distance between two strings is defined as the L1 norm of the difference of their profiles (the number of occurences of each n-gram): SUM( $|V1_i - V2_i|$ ). Q-gram distance is a lower bound on Levenshtein distance, but can be computed in O(m + n), where Levenshtein requires O(m.n)
+        \item \textbf{Cosine similarity: }The similarity between the two strings is the cosine of the angle between these two vectors representation, and is computed as: \\
+        \begin{equation}
+        V1 . V2 / (|V1| * |V2|) 
+        \end{equation}
+        Distance is computed as 1 - cosine similarity.
+
+        \item \textbf{Jaccard index : }Like Q-Gram distance, the input strings are first converted into sets of n-grams (sequences of n characters, also called k-shingles), but this time the cardinality of each n-gram is not taken into account. Each input string is simply a set of n-grams. The Jaccard index is then computed as: \\ 
+        \begin{equation}
+        |V1 \cap V2| / |V1 \cup V2|
+        \end{equation}
+    \end{itemize}
+\item \textbf{Cosine\_similarity\_word : } This is a modified version of cosine angle similarity measure. There we compare two strings' similarity by making two vectors having entries of frequency of distinct letters in it. Here we are picking word by word and vectors are formed on frequency of words. IT works very effectively, That's why we will be high weight to this algorithm as well.
+\end{itemize}

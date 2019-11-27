@@ -1,0 +1,98 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Template: Project Titlepage Modified (v 0.1) by rcx
+%
+% Original Source: http://www.howtotex.com
+% Date: February 2014
+% 
+% This is a title page template which be used for articles & reports.
+% 
+% This is the modified version of the original Latex template from
+% aforementioned website.
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt]{report}
+\usepackage{booktabs}
+\usepackage[a4paper]{geometry}
+\usepackage[myheadings]{fullpage}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{mathtools}
+\usepackage{float}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{multirow}
+\usepackage{breakcites}
+\usepackage{graphics}
+\usepackage{graphicx, wrapfig, subcaption, setspace, booktabs}
+\usepackage[T1]{fontenc}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage{fourier}
+\usepackage[protrusion=true, expansion=true]{microtype}
+\usepackage[english]{babel}
+\usepackage{sectsty}
+\usepackage{lscape}
+\usepackage{url, lipsum}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\renewcommand{\thesection}{\arabic{section}}
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+\onehalfspacing
+
+\begin{document}
+{\fontfamily{cmr}\selectfont
+\title{ \normalsize \textsc{}
+		\\ [2.0cm]
+		\HRule{0.5pt} \\
+		 \textbf{\uppercase{Analysis Report} \\
+		\LARGE Intelligent test interface with Plagiarism Detection\\
+		\Large {(Software Lab Course Project)}
+		\HRule{2pt} \\ [0.5cm]
+		\normalsize \today \vspace*{5\baselineskip}}
+		}
+\date{}
+\author{
+  Jay Bansal\\
+  \texttt{193050004}
+  \and
+  Sriniwas Paliwal\\
+  \texttt{193050042} \\ \\
+  (TEAM INFERNOS)
+  \and
+  Harmeen Kaur\\
+  \texttt{193050020} 
+}
+\maketitle
+\tableofcontents
+%-------------------------------------------------------------------------------
+% Section title formatting
+
+
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+% BODY
+%-------------------------------------------------------------------------------
+\begin{abstract}
+This project work develops an intelligent test interface which helps detecting the plagiarism among responses submitted by various students. Test can be created by admin and floated among students. Test taker can choose to apply plagiarism test, also he can constraint which algorithm to apply for plagiarism index evaluation. This work also includes analysis of various string matching algorithms and python libraries implementing different string similarity and distance measures. Ultimately discovered algorithm will provide weights to different algorithms to come up with the best accurate plagiarism index between students.
+This model can help mitigating the inconsistencies which arise while detecting plagiarism manually in traditional manner, also this can be a lengthy and time-consuming task for the reader but Plagiarism detection model we built will evaluate it automatically in no time.
+\end{abstract}
+\section{Introduction}
+\input{goal.tex}
+\section{Approach to the problem}
+\input{approaches.tex}
+\section{Layout and Flow of Project}
+\input{Layout.tex}
+\section{Technologies Used}
+\input{technologies.tex}
+\section{Efforts}
+\input{efforts.tex}
+\section{Conclusion}
+\input{conclusion.tex}
+\section{Future Enhancements}
+\input{future.tex}
+\section{References}
+\input{references.tex}
+}
+\end{document}
+
